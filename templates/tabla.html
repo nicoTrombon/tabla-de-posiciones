@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+  <head>
+    <title>Liga de Futbol de San Martin de los Andes</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <style> 
+body {
+  font-family: "helvetica", sans-serif;
+  text-align: center;
+          padding: 0px;
+
+}
+.table-center th {
+    background-color: #326295;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+   }
+
+    </style>
+  </head>
+
+
+
+  <body>
+    <h1 class="page-header" style="margin:20px 0 20px">Liga de Futbol de San Martin de los Andes</h1>
+
+ 
+
+    <div class="container" style="padding-bottom: 1em;">
+        <div class="row">
+            <div class="col-xs-4 col-xs-offset-4">
+                <div class="dropdown">
+                      <button class="btn btn-primary dropdown-toggle" id="rank-selector" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ division }} <span class="caret"></span></button>
+                      <ul class="dropdown-menu" aria-labelledby="rank-selector">
+                        <li><a href="?division=primera">Primera</a></li>
+                        <li><a href="?division=reserva">Reserva</a></li>
+                      </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+
+        {% if rank is defined %}
+        <table class="table table-center table-striped table-hover">
+            <thead>
+                <tr>
+                    {% for head in rank_head %}
+                    <th>{{ head }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for row in rank %}
+                <tr>
+                    {% for val in row %}
+                    <td>{{val}}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+         </table>
+        {% endif %}
+
+    </div>
+  </body>
+</html>
+{% endautoescape %}
+
+

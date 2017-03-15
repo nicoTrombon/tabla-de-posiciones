@@ -1,0 +1,6 @@
+venv
+*.pyc
+*~
+*.idea
+notebooks
+db_config.py
