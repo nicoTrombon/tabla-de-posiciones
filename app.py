@@ -1,11 +1,15 @@
-from flask import Flask, render_template, request
+from collections import Counter
+
+from flask import Flask, render_template, request, session, redirect, url_for, flash
 from flask_cache import Cache
 from flask_admin import Admin
 
 from pymongo import MongoClient
+import datetime
 
 from models import ResultadoView
 from db_config import uri
+from db_admin import is_valid
 
 app = Flask(__name__)
 admin = Admin(app)
@@ -30,11 +34,29 @@ def main():
     titulos = ['Posicion', 'Equipo', 'Puntos', 'PJ', 'PG', 'PE', 'PP', 'GF', 'GE', 'DG']
     tabla = get_posiciones(division)
 
+    return render_template('tabla.html', rank=tabla, rank_head=titulos, division=division.capitalize(),
+                           login=session.get('is_admin'))
 
-    return render_template('tabla.html', rank=tabla, rank_head = titulos, division=division.capitalize())
 
 
-from collections import Counter
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+
+    if request.method == 'POST':
+        if not is_valid(request.form['uname'], request.form['psw']):
+            error = 'Invalid credentials'
+        else:
+            flash('You were successfully logged in')
+            session['is_admin'] = True
+            return redirect(url_for('main'))
+    return render_template('login.html', error=error)
+
+
+@app.route('/logout', methods=['GET','POST'])
+def destroy_session():
+    session.clear()
+    return redirect(url_for('main'))
 
 
 @cache.memoize(timeout=1000)
@@ -42,6 +64,23 @@ def get_posiciones(division='primera', year=2017):
     for doc in db.posiciones.find({'division':division}).sort('tstamp', -1):
         tabla = doc['posiciones']
         return tabla
+
+
+@app.route('/actualizo', methods=['GET'])
+def actualizo():
+
+    if not session.get('is_admin'):
+        return 'Unauthorized', 404
+
+    year = sorted(db.resultados.distinct('year'))[-1]
+
+    for division in ['primera', 'reserva']:
+        res = calcular_posiciones(division=division, year=year)
+        tstamp = datetime.datetime.now()
+        db.posiciones.insert({'division': 'reserva', 'tstamp': tstamp, 'posiciones': res})
+
+    return redirect(url_for('main'))
+
 
 
 @cache.memoize(timeout=100)

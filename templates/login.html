@@ -122,20 +122,30 @@ span.psw {
 </style>
 <body>
 
-<h2>Modal Login Form</h2>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<h2>Login para actualizar resultados</h2>
 
 <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
 
 <div id="id01" class="modal">
   
-  <form class="modal-content animate" action="/action_page.php">
+  <form class="modal-content animate" action="/login" method="POST">
     
     <div class="container">
-      <label><b>Username</b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
+      <label><b>Nombre</b></label>
+      <input type="text" placeholder="Nombre..." name="uname" required>
 
-      <label><b>Password</b></label>
-      <input type="password" placeholder="Enter Password" name="psw" required>
+      <label><b>Constraseña</b></label>
+      <input type="password" placeholder="Constraseña..." name="psw" required>
         
       <button type="submit">Login</button>
     </div>

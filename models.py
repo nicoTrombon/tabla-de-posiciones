@@ -1,5 +1,7 @@
 from wtforms import form, fields, SelectField, DateTimeField
 
+from flask import session, redirect, url_for
+
 from flask_admin.form import Select2Widget
 from flask_admin.contrib.pymongo import ModelView, filters
 from flask_admin.model.fields import InlineFormField, InlineFieldList
@@ -46,8 +48,17 @@ u'Las Rosas']]
 
 
 class ResultadoView(ModelView):
+    def is_accessible(self):
+        return session.get('is_admin')
+
+    def inaccessible_callback(self, name, **kwargs):
+        # redirect to login page if user doesn't have access
+        return redirect(url_for('login'))
+
     column_list = ('campeonato', 'division', 'fecha', 'equipo1', 'goles1', 'equipo2',  'goles2', 'tstamp')
     column_sortable_list = ('campeonato', 'division', 'fecha', 'equipo1', 'equipo2', 'goles1', 'goles2', 'tstamp')
 
     form = ResultadoForm
+
+
 

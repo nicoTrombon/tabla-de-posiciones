@@ -30,7 +30,7 @@ body {
   <body>
     <h1 class="page-header" style="margin:20px 0 20px">Liga de Futbol de San Martin de los Andes</h1>
 
- 
+
 
     <div class="container" style="padding-bottom: 1em;">
         <div class="row">
@@ -67,6 +67,16 @@ body {
             {% endfor %}
             </tbody>
          </table>
+        {% endif %}
+
+    </div>
+    <div class="container" style="padding-bottom: 1em;">
+
+        {% if login == true %}
+            <a href="admin/resultadosview" class="btn btn-danger" role="button">CARGAR RESULTADOS</a>
+            <a href="actualizo" class="btn btn-danger" role="button">ACTUALIZO RESULTADOS</a>
+        {% else %}
+            <a href="login" class="btn btn-danger" role="button">LOGIN PARA CARGAR RESULTADOS</a>
         {% endif %}
 
     </div>

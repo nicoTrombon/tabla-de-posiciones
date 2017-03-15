@@ -4,3 +4,4 @@ venv
 *.idea
 notebooks
 db_config.py
+db_admin.py
