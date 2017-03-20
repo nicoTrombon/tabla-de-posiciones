@@ -1,38 +1,18 @@
-<!DOCTYPE html>
-{% autoescape true %}
-<html>
-  <head>
-    <title>Liga de Futbol de San Martin de los Andes</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-	<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <style> 
-body {
-  font-family: "helvetica", sans-serif;
-  text-align: center;
-          padding: 0px;
+{% extends "layout.html" %}
 
-}
-.table-center th {
-    background-color: #326295;
-    font-weight: bold;
-    color: #fff;
-    text-align: center;
-   }
+{% block navbar %}
+<ul class="nav nav-tabs">
+  <li role="presentation" class="active"><a href="#">Tabla</a></li>
+  <li role="presentation"><a href="resultados">Ver Resultados</a></li>
+  <li role="presentation"><a href="admininstrador">Cargar Resultados</a></li>
+</ul>
+{% endblock %}
 
-    </style>
-  </head>
+{% block content %}
 
+  <h1 class="page-header" style="margin:20px 0 20px">Tabla de Posiciones</h1>
 
-
-  <body>
-    <h1 class="page-header" style="margin:20px 0 20px">Liga de Futbol de San Martin de los Andes</h1>
-
-
-
-    <div class="container" style="padding-bottom: 1em;">
+<div class="container" style="padding-bottom: 1em;">
         <div class="row">
             <div class="col-xs-4 col-xs-offset-4">
                 <div class="dropdown">
@@ -70,18 +50,4 @@ body {
         {% endif %}
 
     </div>
-    <div class="container" style="padding-bottom: 1em;">
-
-        {% if login == true %}
-            <a href="admin/resultadosview" class="btn btn-danger" role="button">CARGAR RESULTADOS</a>
-            <a href="actualizo" class="btn btn-danger" role="button">ACTUALIZO RESULTADOS</a>
-        {% else %}
-            <a href="login" class="btn btn-danger" role="button">LOGIN PARA CARGAR RESULTADOS</a>
-        {% endif %}
-
-    </div>
-  </body>
-</html>
-{% endautoescape %}
-
-
+{% endblock %}
