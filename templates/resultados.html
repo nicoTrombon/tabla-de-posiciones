@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block navbar %}
+<ul class="nav nav-tabs">
+  <li role="presentation"><a href="tabla">Tabla</a></li>
+  <li role="presentation" class="active"><a href="#">Ver Resultados</a></li>
+  <li role="presentation"><a href="admininstrador">Cargar Resultados</a></li>
+</ul>
+{% endblock %}
+
+{% block content %}
+  <h1 class="page-header" style="margin:20px 0 20px">Resultados</h1>
+
+    <div class="container" style="padding-bottom: 1em;">
+        <div class="row">
+            <div class="col-xs-4 col-xs-offset-4">
+                <div class="dropdown">
+                      <button class="btn btn-primary dropdown-toggle" id="rank-selector" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ division }} <span class="caret"></span></button>
+                      <ul class="dropdown-menu" aria-labelledby="rank-selector">
+                        <li><a href="?division=primera">Primera</a></li>
+                        <li><a href="?division=reserva">Reserva</a></li>
+                      </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<div class="container">
+    {% for fecha in fechas %}
+    <div class="panel panel-info">
+          <div class="panel-heading">
+            <h3 class="panel-title">Fecha {{fecha}}</h3>
+          </div>
+          {% for resultado in resultados[fecha] %}
+          <div class="panel-body">
+              <div class="row">
+                  <div class="col-xs-4" style="text-align:right;">{{ resultado.e1 }}</div>
+                  <div class="col-xs-4">
+                      <div class="row">
+                          <div class="col-xs-4" style="background-color: gainsboro; font-weight: bold;">{{ resultado.g1 }}</div>
+                          <div class="col-xs-4" style="font-weight: bold;">-</div>
+                          <div class="col-xs-4" style="background-color: gainsboro; font-weight: bold;">{{ resultado.g2 }}</div>
+                      </div>
+                  </div>
+                  <div class="col-xs-4" style="text-align:left;">{{ resultado.e2 }}</div>
+              </div>
+
+          </div>
+          {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

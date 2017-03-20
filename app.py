@@ -1,4 +1,4 @@
-from collections import Counter
+from collections import Counter, defaultdict
 
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 from flask_cache import Cache
@@ -19,12 +19,15 @@ cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 #necessary for sessions
 app.config['SECRET_KEY'] = '123456790'
 
-db = MongoClient(uri).futbol_sma
+db = MongoClient(uri, connect=False).futbol_sma
 
 admin.add_view(ResultadoView(db.resultados, 'Resultado'))
 
+TORNEO = 2017
+
 
 @app.route('/', methods=['GET'])
+@app.route('/tabla', methods=['GET'])
 def main():
 
     division = request.args.get('division')
@@ -34,8 +37,27 @@ def main():
     titulos = ['Posicion', 'Equipo', 'Puntos', 'PJ', 'PG', 'PE', 'PP', 'GF', 'GE', 'DG']
     tabla = get_posiciones(division)
 
-    return render_template('tabla.html', rank=tabla, rank_head=titulos, division=division.capitalize(),
-                           login=session.get('is_admin'))
+    return render_template('tabla.html', rank=tabla, rank_head=titulos, division=division.capitalize())
+
+
+
+@app.route('/resultados', methods=['GET'])
+def resultados():
+    division = request.args.get('division')
+
+    if division not in ['primera', 'reserva']:
+        division = 'primera'
+
+    fechas = get_fechas(division)
+
+    resultados = get_resultados(division)
+
+    return render_template('resultados.html', fechas=fechas, resultados=resultados, division=division.capitalize())
+
+
+@app.route('/admininstrador', methods=['GET'])
+def administrador():
+    return render_template('admin.html', login=session.get('is_admin'))
 
 
 
@@ -49,7 +71,7 @@ def login():
         else:
             flash('You were successfully logged in')
             session['is_admin'] = True
-            return redirect(url_for('main'))
+            return redirect(url_for('administrador'))
     return render_template('login.html', error=error)
 
 
@@ -151,6 +173,23 @@ def calcular_posiciones(division='primera', year=2017):
         ranking.append([rank, equipo, puntos[equipo], pj[equipo], pg[equipo], pe[equipo], pp[equipo], gf[equipo], gc[equipo], dg[equipo]])
 
     return ranking
+
+
+@cache.memoize(1000)
+def get_fechas(division='primera'):
+    return sorted(db.resultados.find({'campeonato': TORNEO, 'division': division}).distinct('fecha'), reverse=True)
+
+
+@cache.memoize(1000)
+def get_resultados(division='primera'):
+    resultados = defaultdict(list)
+
+    for doc in db.resultados.find({'campeonato': TORNEO, 'division': division}):
+        resultados[doc['fecha']].append({'e1': doc['equipo1'].upper(), 'g1': doc['goles1'],
+                                         'e2': doc['equipo2'].upper(), 'g2': doc['goles2']})
+    return resultados
+
+
 
 
 if __name__ == '__main__':

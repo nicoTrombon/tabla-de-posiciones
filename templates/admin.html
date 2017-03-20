@@ -1,5 +1,6 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
+
+{% block extra_style %}
 <style>
 /* Full-width input fields */
 input[type=text], input[type=password] {
@@ -100,12 +101,12 @@ span.psw {
 }
 
 @-webkit-keyframes animatezoom {
-    from {-webkit-transform: scale(0)} 
+    from {-webkit-transform: scale(0)}
     to {-webkit-transform: scale(1)}
 }
-    
+
 @keyframes animatezoom {
-    from {transform: scale(0)} 
+    from {transform: scale(0)}
     to {transform: scale(1)}
 }
 
@@ -126,33 +127,38 @@ body {
 
 }
 </style>
-<body>
+{% endblock %}
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
+{% block navbar %}
+<ul class="nav nav-tabs">
+  <li role="presentation"><a href="tabla">Tabla</a></li>
+  <li role="presentation"><a href="resultados">Ver Resultados</a></li>
+  <li role="presentation" class="active"><a href="#">Cargar Resultados</a></li>
+</ul>
+{% endblock %}
 
-<h2>Login para actualizar resultados</h2>
+{% block content %}
 
-<button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
+<h1 class="page-header" style="margin:20px 0 20px">Tareas Admninistrativas</h1>
+<div class="container" style="padding-bottom: 1em;">
+
+        {% if login == true %}
+            <a href="admin/resultadosview" class="btn btn-danger" role="button">CARGAR RESULTADOS</a>
+            <a href="actualizo" class="btn btn-danger" role="button">ACTUALIZO RESULTADOS</a>
+        {% else %}
+            <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
 
 <div id="id01" class="modal">
-  
+
   <form class="modal-content animate" action="/login" method="POST">
-    
+
     <div class="container">
       <label><b>Nombre</b></label>
       <input type="text" placeholder="Nombre..." name="uname" required>
 
       <label><b>Constraseña</b></label>
       <input type="password" placeholder="Constraseña..." name="psw" required>
-        
+
       <button type="submit">Login</button>
     </div>
 
@@ -174,6 +180,6 @@ window.onclick = function(event) {
 }
 </script>
 
-</body>
-</html>
-
+        {% endif %}
+</div>
+{% endblock %}
