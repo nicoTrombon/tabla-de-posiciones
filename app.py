@@ -48,7 +48,7 @@ def main():
     tabla = get_posiciones(division)
 
     return render_template('tabla.html', rank=tabla, rank_head=titulos,
-                           division=division.capitalize(), divisiones=TORNEOS)
+                           division=division.capitalize(), divisiones=DIVISIONES)
 
 
 
@@ -64,7 +64,7 @@ def resultados():
     resultados = get_resultados(division)
 
     return render_template('resultados.html', fechas=fechas, resultados=resultados,
-                           division=division.capitalize(), divisiones=TORNEOS)
+                           division=division.capitalize(), divisiones=DIVISIONES)
 
 
 @app.route('/admininstrador', methods=['GET'])
