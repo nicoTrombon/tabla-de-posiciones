@@ -1,4 +1,4 @@
-from settings import TORNEOS
+from settings import DIVISIONES
 
 from wtforms import form, fields, SelectField, DateTimeField
 
@@ -15,7 +15,7 @@ import datetime
 class ResultadoForm(form.Form):
     fecha = SelectField(label='Fecha', coerce=int, choices=[(p,p) for p in range(1,15)])
 
-    division = SelectField(label='Division', choices=[(p.lower(), p.capitalize()) for p in TORNEOS])
+    division = SelectField(label='Division', choices=[(p.lower(), p.capitalize()) for p in DIVISIONES])
     
     equipos = choices=[(p,p) for p in [u'La Villa',
  u'Embajador',

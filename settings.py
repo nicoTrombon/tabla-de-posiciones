@@ -1,1 +1,1 @@
-TORNEOS = ['primera', 'reserva', 'femenino']
+DIVISIONES = ['primera', 'reserva', 'femenino']
