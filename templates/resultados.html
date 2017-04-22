@@ -17,8 +17,9 @@
                 <div class="dropdown">
                       <button class="btn btn-primary dropdown-toggle" id="rank-selector" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ division }} <span class="caret"></span></button>
                       <ul class="dropdown-menu" aria-labelledby="rank-selector">
-                        <li><a href="?division=primera">Primera</a></li>
-                        <li><a href="?division=reserva">Reserva</a></li>
+                       {% for div in divisiones %}
+                        <li><a href="?division={{div}}">{{div.capitalize()}}</a></li>
+                        {% endfor %}
                       </ul>
                 </div>
             </div>

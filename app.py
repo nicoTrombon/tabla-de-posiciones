@@ -10,6 +10,7 @@ import datetime
 from models import ResultadoView
 from db_config import uri
 from db_admin import is_valid
+from settings import TORNEOS
 
 app = Flask(__name__)
 admin = Admin(app)
@@ -23,21 +24,21 @@ db = MongoClient(uri, connect=False).futbol_sma
 
 admin.add_view(ResultadoView(db.resultados, 'Resultado'))
 
-TORNEO = 2017
-
+TORNEO = sorted(db.resultados.distinct('campeonato'))[-1]
 
 @app.route('/', methods=['GET'])
 @app.route('/tabla', methods=['GET'])
 def main():
 
     division = request.args.get('division')
-    if division not in ['primera', 'reserva']:
+    if division not in TORNEOS:
         division = 'primera'
 
     titulos = ['Posicion', 'Equipo', 'Puntos', 'PJ', 'PG', 'PE', 'PP', 'GF', 'GE', 'DG']
     tabla = get_posiciones(division)
 
-    return render_template('tabla.html', rank=tabla, rank_head=titulos, division=division.capitalize())
+    return render_template('tabla.html', rank=tabla, rank_head=titulos,
+                           division=division.capitalize(), divisiones=TORNEOS)
 
 
 
@@ -45,20 +46,20 @@ def main():
 def resultados():
     division = request.args.get('division')
 
-    if division not in ['primera', 'reserva']:
+    if division not in TORNEOS:
         division = 'primera'
 
     fechas = get_fechas(division)
 
     resultados = get_resultados(division)
 
-    return render_template('resultados.html', fechas=fechas, resultados=resultados, division=division.capitalize())
+    return render_template('resultados.html', fechas=fechas, resultados=resultados,
+                           division=division.capitalize(), divisiones=TORNEOS)
 
 
 @app.route('/admininstrador', methods=['GET'])
 def administrador():
     return render_template('admin.html', login=session.get('is_admin'))
-
 
 
 @app.route('/login', methods=['POST'])
