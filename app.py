@@ -25,13 +25,26 @@ admin.add_view(ResultadoView(db.resultados, 'Resultado'))
 
 TORNEO = 2017
 
+update_now = False
+
+
+def set_update_true():
+    global update_now
+    update_now = True
+
+def recalculate():
+    return update_now
+
+
+DIVISIONES = ['primera', 'reserva', 'femenino']
+
 
 @app.route('/', methods=['GET'])
 @app.route('/tabla', methods=['GET'])
 def main():
 
     division = request.args.get('division')
-    if division not in ['primera', 'reserva']:
+    if division not in DIVISIONES:
         division = 'primera'
 
     titulos = ['Posicion', 'Equipo', 'Puntos', 'PJ', 'PG', 'PE', 'PP', 'GF', 'GE', 'DG']
@@ -45,7 +58,7 @@ def main():
 def resultados():
     division = request.args.get('division')
 
-    if division not in ['primera', 'reserva']:
+    if division not in DIVISIONES:
         division = 'primera'
 
     fechas = get_fechas(division)
@@ -80,7 +93,7 @@ def destroy_session():
     return redirect(url_for('main'))
 
 
-@cache.memoize(timeout=1000)
+@cache.memoize(unless=recalculate)
 def get_posiciones(division='primera', year=2017):
     for doc in db.posiciones.find({'division': division, 'posiciones': {'$nin': [None, []]}}).sort('tstamp', -1):
         tabla = doc['posiciones']
@@ -99,6 +112,11 @@ def actualizo():
         res = calcular_posiciones(division=division, year=year)
         tstamp = datetime.datetime.now()
         db.posiciones.insert({'division': division, 'tstamp': tstamp, 'posiciones': res})
+
+    set_update_true()
+
+    for division in ['primera', 'reserva']:
+        get_posiciones(division)
 
     return redirect(url_for('main'))
 
@@ -195,5 +213,5 @@ def get_resultados(division='primera'):
 
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+#if __name__ == '__main__':
+#    app.run(debug=True)
