@@ -1,4 +1,4 @@
-from settings import DIVISIONES
+from settings import DIVISIONES, TORNEOS
 
 from wtforms import form, fields, SelectField, DateTimeField
 
@@ -41,7 +41,7 @@ u'Las Rosas']]
     
     goles2 = SelectField(label='Goles Equipo 2', coerce=int, choices=[(p,p) for p in range(15)])
 
-    campeonato = SelectField(label='Campeonato', coerce=int, choices=[(2017,2017),])
+    campeonato = SelectField(label='Campeonato', choices=[(t,t) for t in TORNEOS])
 
     #tstamp = datetime.datetime.now()
 

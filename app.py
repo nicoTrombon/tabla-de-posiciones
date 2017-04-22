@@ -106,14 +106,14 @@ def actualizo():
 
     year = sorted(db.resultados.distinct('campeonato'))[-1]
 
-    for division in ['primera', 'reserva']:
+    for division in DIVISIONES:
         res = calcular_posiciones(division=division, year=year)
         tstamp = datetime.datetime.now()
         db.posiciones.insert({'division': division, 'tstamp': tstamp, 'posiciones': res})
 
     set_update_true()
 
-    for division in ['primera', 'reserva']:
+    for division in DIVISIONES:
         get_posiciones(division)
 
     return redirect(url_for('main'))
@@ -121,7 +121,7 @@ def actualizo():
 
 
 @cache.memoize(timeout=100)
-def calcular_posiciones(division='primera', year=2017):
+def calcular_posiciones(division, year):
 
     col = db.resultados
 
