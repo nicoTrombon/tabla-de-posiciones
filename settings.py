@@ -1,0 +1,1 @@
+DIVISIONES = ['primera', 'reserva', 'femenino']

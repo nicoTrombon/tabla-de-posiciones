@@ -18,8 +18,9 @@
                 <div class="dropdown">
                       <button class="btn btn-primary dropdown-toggle" id="rank-selector" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ division }} <span class="caret"></span></button>
                       <ul class="dropdown-menu" aria-labelledby="rank-selector">
-                        <li><a href="?division=primera">Primera</a></li>
-                        <li><a href="?division=reserva">Reserva</a></li>
+                        {% for div in divisiones %}
+                        <li><a href="?division={{div}}">{{div.capitalize()}}</a></li>
+                        {% endfor %}
                       </ul>
                 </div>
             </div>
@@ -27,8 +28,6 @@
     </div>
 
     <div class="container">
-
-        {% if rank is defined %}
         <table class="table table-center table-striped table-hover">
             <thead>
                 <tr>
@@ -38,6 +37,7 @@
                 </tr>
             </thead>
             <tbody>
+            {% if rank is not none %}
             {% for row in rank %}
                 <tr>
                     {% for val in row %}
@@ -45,9 +45,10 @@
                     {% endfor %}
                 </tr>
             {% endfor %}
+            {% endif %}
             </tbody>
          </table>
-        {% endif %}
+
 
     </div>
 {% endblock %}
