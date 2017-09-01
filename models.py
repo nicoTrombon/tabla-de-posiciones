@@ -16,7 +16,7 @@ class ResultadoForm(form.Form):
     fecha = SelectField(label='Fecha', coerce=int, choices=[(p,p) for p in range(1,15)])
 
     division = SelectField(label='Division', choices=[(p.lower(), p.capitalize()) for p in DIVISIONES])
-    
+
     equipos = choices=[(p,p) for p in [u'La Villa',
  u'Embajador',
  u'Sarmiento',
@@ -30,15 +30,20 @@ class ResultadoForm(form.Form):
  u'Vallejos',
  u'Belgrano',
 u'Las Aguilas',
-u'Las Rosas']]
-    
+u'Las Rosas',
+u'Dinamo',
+u'Velez',
+u'Trahunco',
+u'Cordones',
+u'Real Maipu']]
+
     equipo1 = SelectField(label='Equipo 1', choices=equipos)
 
-    goles1 = SelectField(label='Goles Equipo 1', coerce=int, choices=[(p,p) for p in range(15)])    
-    
-    equipo2 = fields.SelectField(label='Equipo 2', choices=equipos) 
-           
-    
+    goles1 = SelectField(label='Goles Equipo 1', coerce=int, choices=[(p,p) for p in range(15)])
+
+    equipo2 = fields.SelectField(label='Equipo 2', choices=equipos)
+
+
     goles2 = SelectField(label='Goles Equipo 2', coerce=int, choices=[(p,p) for p in range(15)])
 
     campeonato = SelectField(label='Campeonato', choices=[(t,t) for t in TORNEOS])
