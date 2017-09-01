@@ -92,7 +92,7 @@ def destroy_session():
 
 
 @cache.memoize(unless=recalculate)
-def get_posiciones(division='primera', year=2017):
+def get_posiciones(division='primera'):
     for doc in db.posiciones.find({'division': division, 'posiciones': {'$nin': [None, []]}}).sort('tstamp', -1):
         tabla = doc['posiciones']
         return tabla
@@ -104,10 +104,8 @@ def actualizo():
     if not session.get('is_admin'):
         return 'Unauthorized', 404
 
-    year = sorted(db.resultados.distinct('campeonato'))[-1]
-
     for division in DIVISIONES:
-        res = calcular_posiciones(division=division, year=year)
+        res = calcular_posiciones(division=division)
         tstamp = datetime.datetime.now()
         db.posiciones.insert({'division': division, 'tstamp': tstamp, 'posiciones': res})
 
@@ -121,14 +119,16 @@ def actualizo():
 
 
 @cache.memoize(timeout=100)
-def calcular_posiciones(division, year):
+def calcular_posiciones(division):
 
     col = db.resultados
 
     col.create_index('division')
-    col.create_index('year')
+    col.create_index('campeonato')
 
-    query = {'division':division, 'campeonato':year}
+    torneo = sorted(col.distinct('campeonato'))[-1]
+
+    query = {'division':division, 'campeonato':torneo}
 
     equipos = set()
 
